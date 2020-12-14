@@ -11,9 +11,11 @@ class App extends Component {
     imagesArray: [],
   };
 
-  componentDidMount() {
+  onChangeSearchWord = searchWord => {
+    console.log(searchWord);
+
     fetch(
-      `https://pixabay.com/api/?q=flower&page=1&key=${keyApi}&image_type=photo&orientation=horizontal&per_page=12`,
+      `https://pixabay.com/api/?q=${searchWord}&page=1&key=${keyApi}&image_type=photo&orientation=horizontal&per_page=12`,
     )
       .then(responce => responce.json())
       .then(data => {
@@ -22,13 +24,13 @@ class App extends Component {
           imagesArray: data.hits,
         });
       });
-  }
+  };
 
   render() {
     const { imagesArray } = this.state;
     return (
       <div>
-        <Searchbar />
+        <Searchbar onSubmit={this.onChangeSearchWord} />
         <ImageGallery imagesArray={imagesArray} />
       </div>
     );
