@@ -78,6 +78,12 @@ class App extends Component {
   };
 
   onImageClick = event => {
+    // Проверка клика ИМЕННО по изображению
+    if (event.target.nodeName !== 'IMG') {
+      console.log('Did not push on the image!');
+      return;
+    }
+
     // получила ссылку на нажатую картинку
     // записываю ссылку на нажатую картинку в state.clickedImageUrl
     this.setState({ clickedImageUrl: event.target.dataset.url });
@@ -101,8 +107,14 @@ class App extends Component {
         )}
         {imagesArray.length > 0 && <Button onClickHandle={this.fetchImages} />}
         {showModal && (
-          <Modal>
-            <img src={clickedImageUrl} alt="" width="1200" height="800" />
+          <Modal onClose={this.toggleModal}>
+            <img
+              src={clickedImageUrl}
+              alt=""
+              width="1200"
+              height="800"
+              onClick={this.toggleModal}
+            />
           </Modal>
         )}
       </div>
