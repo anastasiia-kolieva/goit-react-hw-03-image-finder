@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import s from './ImageGallery.module.css';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 
-const ImageGallery = ({ imagesArray }) => {
+const ImageGallery = ({ imagesArray, handlerImageClick }) => {
   return (
     <ul className={s.ImageGallery}>
       {imagesArray.map(image => (
@@ -10,6 +10,8 @@ const ImageGallery = ({ imagesArray }) => {
           key={image.id}
           src={image.webformatURL}
           alt={image.tags}
+          imageClick={handlerImageClick}
+          largeSrc={image.largeImageURL}
         />
       ))}
     </ul>

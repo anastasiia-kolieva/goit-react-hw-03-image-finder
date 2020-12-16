@@ -6,6 +6,8 @@ import './App.module.css';
 import Searchbar from './components/Searchbar/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Button from './components/Button/Button';
+import Modal from './components/Modal/Modal';
+import s from './App.module.css';
 
 // ключь API
 const keyApi = '18681025-f668a3aca189dfba87ba57015';
@@ -18,6 +20,8 @@ class App extends Component {
     isLoading: false,
     // верхние кординаты страницы(для скрола)
     pageCords: 0,
+    showModal: false,
+    clickedImageUrl: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -66,16 +70,41 @@ class App extends Component {
       .finally(() => this.setState({ isLoading: false }));
   };
 
+  // метод для инверсии значения showModal
+  toggleModal = () => {
+    this.setState(state => ({
+      showModal: !state.showModal,
+    }));
+  };
+
+  onImageClick = event => {
+    // получила ссылку на нажатую картинку
+    // записываю ссылку на нажатую картинку в state.clickedImageUrl
+    this.setState({ clickedImageUrl: event.target.dataset.url });
+    // открываю модалку
+    this.toggleModal();
+  };
+
   render() {
-    const { imagesArray, isLoading } = this.state;
+    const { imagesArray, isLoading, showModal, clickedImageUrl } = this.state;
     return (
-      <div>
+      <div className={s.App}>
         <Searchbar onSubmit={this.onChangeSearchWord} />
-        <ImageGallery imagesArray={imagesArray} />
+        <ImageGallery
+          imagesArray={imagesArray}
+          handlerImageClick={this.onImageClick}
+        />
         {isLoading && (
-          <Loader type="Hearts" color="#00BFFF" height={80} width={80} />
+          <div className={s.loaderWrapper}>
+            <Loader type="Hearts" color="#00BFFF" height={80} width={80} />
+          </div>
         )}
         {imagesArray.length > 0 && <Button onClickHandle={this.fetchImages} />}
+        {showModal && (
+          <Modal>
+            <img src={clickedImageUrl} alt="" width="1200" height="800" />
+          </Modal>
+        )}
       </div>
     );
   }
