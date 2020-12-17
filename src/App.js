@@ -29,9 +29,7 @@ class App extends Component {
     // фетча синхронна, потому выполняется первее.
     // вызов функции fetchImages будет только тогда когда в searchImage будет новое значение
     if (prevState.searchQuery !== this.state.searchQuery) {
-      this.fetchImages();
-    } else {
-      this.render(prevState);
+      this.setState({ imagesArray: [] }, this.fetchImages);
     }
   }
 
