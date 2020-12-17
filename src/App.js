@@ -16,7 +16,7 @@ class App extends Component {
   state = {
     imagesArray: [],
     currentPage: 1,
-    searchImage: '',
+    searchQuery: '',
     isLoading: false,
     // верхние кординаты страницы(для скрола)
     pageCords: 0,
@@ -28,8 +28,10 @@ class App extends Component {
     // необходимо при пролистывании(нажатия на кнопку"догрузить"). Сохранение слова-поиска асинхронно, а функция
     // фетча синхронна, потому выполняется первее.
     // вызов функции fetchImages будет только тогда когда в searchImage будет новое значение
-    if (prevState.searchImage !== this.state.searchImage) {
+    if (prevState.searchQuery !== this.state.searchQuery) {
       this.fetchImages();
+    } else {
+      this.render(prevState);
     }
   }
 
@@ -37,11 +39,11 @@ class App extends Component {
     // когда получаем слово для поиска картинки, сохраняем в стейт это слово для последующего
     // перелистывания(нажатия на кнопку"догрузить")
     // сбрасываем в исходное состояние currentPage и imagesArray, в случае нового ввода нового слова поиска
-    this.setState({ searchImage: searchWord, currentPage: 1, imagesArray: [] });
+    this.setState({ searchQuery: searchWord, currentPage: 1, imagesArray: [] });
   };
 
   fetchImages = () => {
-    const { currentPage, searchImage, pageCords } = this.state;
+    const { currentPage, searchQuery, pageCords } = this.state;
     const cords = document.documentElement.scrollHeight;
     // загрузщик + новые кординаты для скрола
     this.setState({ isLoading: true, pageCords: cords });
@@ -52,7 +54,7 @@ class App extends Component {
     });
 
     fetch(
-      `https://pixabay.com/api/?q=${searchImage}&page=${currentPage}&key=${keyApi}&image_type=photo&orientation=horizontal&per_page=12`,
+      `https://pixabay.com/api/?q=${searchQuery}&page=${currentPage}&key=${keyApi}&image_type=photo&orientation=horizontal&per_page=12`,
     )
       .then(responce => responce.json())
       .then(data => {
